@@ -12,6 +12,7 @@ class Course(models.Model):
     course_name = models.TextField(max_length=50, default="None")
     course_description = models.TextField(max_length=400, default="None")
     people = models.JSONField(default=list)  # Store user IDs as a list of integers
+    instructors = models.JSONField(default=list)  # Store instructor user IDs as a list of integers
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
     joinable = models.BooleanField(default=False)
     visible = models.BooleanField(default=False)
