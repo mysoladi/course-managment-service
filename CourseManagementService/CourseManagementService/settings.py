@@ -25,7 +25,13 @@ SECRET_KEY = 'django-insecure-j#ku9soo)30js)n1vqxbeqqouf#bly7x#@w0^jqjiuxq64i!8q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'edunexa.onrender.com',
+    'http://localhost:3000',
+    '0.0.0.0',
+    '127.0.0.1',
+    "https://edunexa.onrender.com"
+]
 
 
 # Application definition
@@ -38,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'api.apps.ApiConfig',
-    'rest_framework'
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -77,8 +83,12 @@ WSGI_APPLICATION = 'CourseManagementService.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'railway',
+        'USER': 'postgres',
+        'PASSWORD': 'ZtCdRfRnYoMeTrALoeiHEoEpisXFgLLM',
+        'HOST': 'viaduct.proxy.rlwy.net',
+        'PORT': '33703',
     }
 }
 
