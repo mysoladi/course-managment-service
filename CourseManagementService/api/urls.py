@@ -1,6 +1,8 @@
 from django.urls import path
-from .views import greetings
+from . import views
 
 urlpatterns = [
-    path('', greetings)
+    # Greetings
+    # Course management endpoints
+    path('add/', views.AddCourse.as_view(), name='add_course'),
 ]
