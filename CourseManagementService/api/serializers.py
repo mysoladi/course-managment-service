@@ -16,3 +16,11 @@ class assignmentSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return models.Assignment.objects.create(**validated_data)
+    
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Announcement
+        fields = ['title', 'message']
+    
+    def create(self, validated_data):
+        return models.Announcement.objects.create(**validated_data)

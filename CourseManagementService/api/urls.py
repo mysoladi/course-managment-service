@@ -10,8 +10,9 @@ urlpatterns = [
     path('course/approve', views.ApproveCourse.as_view(), name='approve_course'),
     path('course/activate', views.ActivateCourse.as_view(), name='activate_course'),
     path('course/deny', views.DenyCourse.as_view(), name='deny_course'),
-    path('course/activate', views.ActivateCourse.as_view(), name='activate_course'),
     path('course/conclude', views.ConcludeCourse.as_view(), name='conclude_course'),
     path('course/join', views.JoinCourse.as_view(), name='join_course'),
     path('course/leave', views.LeaveCourse.as_view(), name='leave_course'),
+    path('announcement/add', views.AddAnnouncement.as_view(), name="add_announcement"),
+    path('announcement/remove', views.RemoveAnnouncement.as_view(), name="remove_announcement")
 ]

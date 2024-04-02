@@ -16,8 +16,9 @@ class AddCourse(APIView):
         if serializer.is_valid():
             # Grab the Instructor's ID (The person submitting the course)
             user_id = self.request.query_params.get('user_id')
-
-            # TODO: Ensure that they are an instructor
+            user_role = self.request.query_params.get('user_role')
+            if user_role not in ['Instructor', 'Admin']:
+                return Response({"message": "User is not instructor or admin."}, status=status.HTTP_400_BAD_REQUEST)
             
             # Modify the people data to be a list of dictionaries
             people_data = [{"user_id": user_id, "title": "Instructor"}]
@@ -34,7 +35,9 @@ class RemoveCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
         user_id = self.request.query_params.get('user_id')
-        # TODO: Ensure that they are an admin
+        user_role = self.request.query_params.get('user_role')
+        if user_role != 'Admin':
+            return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Retrieve course_id from request data
         course_id = request.data.get('course_id')
@@ -51,7 +54,9 @@ class ApproveCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
         user_id = self.request.query_params.get('user_id')
-        # TODO: Ensure that they are an admin
+        user_role = self.request.query_params.get('user_role')
+        if user_role != 'Admin':
+            return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Retrieve course_id from request data
         course_id = request.data.get('course_id')
@@ -73,7 +78,9 @@ class DenyCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
         user_id = self.request.query_params.get('user_id')
-        # TODO: Ensure that they are an admin
+        user_role = self.request.query_params.get('user_role')
+        if user_role != 'Admin':
+            return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
         # Retrieve course_id from request data
         course_id = request.data.get('course_id')
@@ -201,18 +208,30 @@ class JoinCourse(APIView):
         
         return Response({"message": f"User {user_id} joined course {course_id} successfully"}, status=status.HTTP_200_OK)
 
-class AddAssignment(APIView):
+class AddAnnouncement(APIView):
     def post(self, request):
-        # Create a new assignment instance using the serializer
+        # Retrieve user_id from query parameters
+        user_id = request.query_params.get('user_id')
+        
+        # Retrieve course_id from request data
+        course_id = request.data.get('course_id')
 
-        serializer = serializers.assignmentSerializer(data=request.data)
+        serializer = serializers.AnnouncementSerializer(data=request.data)
         if serializer.is_valid():
             # Save the assignment instance
-            assignment = serializer.save()
-            assignment.save()
-
+            serializer.validated_data['author'] = user_id
+            serializer.validated_data['course'] = get_object_or_404(models.Course, pk=course_id)
+            announcement = serializer.save()
+            announcement.save()
             return JsonResponse({"message": "Assignment added successfully"}, status=status.HTTP_201_CREATED)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
+class RemoveAnnouncement(APIView):
+    def put(self, request):
+        announcement_id = request.data.get('announcement_id')
+        announcement = get_object_or_404(models.Announcement, pk=announcement_id)
+        announcement.delete()
+        return Response({"message": "Announcement removed successfully"}, status=status.HTTP_204_NO_CONTENT)
 
         
