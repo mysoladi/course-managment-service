@@ -218,12 +218,12 @@ class AddAnnouncement(APIView):
 
         serializer = serializers.AnnouncementSerializer(data=request.data)
         if serializer.is_valid():
-            # Save the assignment instance
+            # Save the announcement instance
             serializer.validated_data['author'] = user_id
             serializer.validated_data['course'] = get_object_or_404(models.Course, pk=course_id)
             announcement = serializer.save()
             announcement.save()
-            return JsonResponse({"message": "Assignment added successfully"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"message": "Announcement added successfully"}, status=status.HTTP_201_CREATED)
         else:
             return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
@@ -233,5 +233,107 @@ class RemoveAnnouncement(APIView):
         announcement = get_object_or_404(models.Announcement, pk=announcement_id)
         announcement.delete()
         return Response({"message": "Announcement removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+    
+class GetAnnouncementList(APIView):
+    def get(self, request):
+        # Retrieve user_id from query parameters
+        user_id = request.query_params.get('user_id')
 
+        course_id = request.data.get('course_id')
+
+        # Query all Announcements from the database where the course id matches
+        announcements = models.Announcement.objects.filter(course=get_object_or_404(models.Course, pk=course_id))
+
+        # Serialize the course instances into JSON format
+        serializer = serializers.AnnouncementSerializer(announcements, many=True)
+
+        # Return the serialized data as a response
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class AddAssignment(APIView):
+    def post(self, request):
+        # Retrieve user_id from query parameters
+        user_id = request.query_params.get('user_id')
         
+        # Retrieve course_id from request data
+        course_id = request.data.get('course_id')
+
+        serializer = serializers.AssignmentSerializer(data=request.data)
+        if serializer.is_valid():
+            # Save the assignment instance
+            serializer.validated_data['author'] = user_id
+            serializer.validated_data['course'] = get_object_or_404(models.Course, pk=course_id)
+            announcement = serializer.save()
+            announcement.save()
+            return JsonResponse({"message": "Assignment added successfully"}, status=status.HTTP_201_CREATED)
+        else:
+            return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RemoveAssignment(APIView):
+    def put(self, request):
+        # Grab the Instructor's ID (The person activating the course)
+        user_id = self.request.query_params.get('user_id')
+
+        # Retrieve course_id from request data
+        course_id = request.data.get('course_id')
+        
+        # Get the course instance from the database or return 404 if not found
+        course = get_object_or_404(models.Course, pk=course_id)
+
+        # Iterate over the people dictionary in the course
+        for person in course.people:
+            id = person.get('user_id')
+            title = person.get('title')
+
+            if id == user_id and title == 'Instructor':
+                assignment_id = request.data.get('assignment_id')
+                assignment = get_object_or_404(models.Assignment, pk=assignment_id)
+                assignment.delete()
+                return Response({"message": "assignment removed successfully"}, status=status.HTTP_204_NO_CONTENT)
+        # If the loop completes without finding a matching instructor, return an error response
+        return Response({"message": "Failed to remove assignment. User is not the instructor."}, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetAssignmentList(APIView):
+    def get(self, request):
+        # Retrieve user_id from query parameters
+        user_id = request.query_params.get('user_id')
+
+        course_id = request.data.get('course_id')
+
+        # Query all Anssignment from the database where the course id matches
+        announcements = models.Assignment.objects.filter(course=get_object_or_404(models.Course, pk=course_id))
+
+        # Serialize the course instances into JSON format
+        serializer = serializers.AssignmentSerializer(announcements, many=True)
+
+        # Return the serialized data as a response
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class PublishAssignment(APIView):
+    def put(self, request):
+        # Grab the Instructor's ID (The person publishing the assignment)
+        user_id = self.request.query_params.get('user_id')
+
+        # Retrieve course_id from request data
+        assignment_id = request.data.get('assignment_id')
+        # Retrieve assignment_id from request data
+        course_id = request.data.get('course_id')
+
+        # Get the assignment instance from the database or return 404 if not found
+        assignment = get_object_or_404(models.Assignment, pk=assignment_id)
+        # Get the course instance from the database or return 404 if not found
+        course = get_object_or_404(models.Course, pk=course_id)
+
+        # Iterate over the people dictionary in the course
+        for person in course.people:
+            id = person.get('user_id')
+            title = person.get('title')
+
+            if id == user_id and title == 'Instructor':
+                # Update the assignment is_published status to "True"
+                assignment.is_published = True
+                # Save the updated course
+                assignment.save()
+                return Response({"message": "assignment published successfully"}, status=status.HTTP_200_OK)
+        # If the loop completes without finding a matching instructor, return an error response
+        return Response({"message": "Failed to publish assignment. User is not the instructor."}, status=status.HTTP_400_BAD_REQUEST)

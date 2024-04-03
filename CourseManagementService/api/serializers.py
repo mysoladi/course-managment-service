@@ -9,10 +9,10 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return models.Course.objects.create(**validated_data)
     
-class assignmentSerializer(serializers.ModelSerializer):
+class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Assignment
-        fields = ['title', 'assignment_description', 'due_date']
+        fields = ['title', 'description', 'due_date']
 
     def create(self, validated_data):
         return models.Assignment.objects.create(**validated_data)
