@@ -239,7 +239,7 @@ class GetAnnouncementList(APIView):
         # Retrieve user_id from query parameters
         user_id = request.query_params.get('user_id')
 
-        course_id = request.data.get('course_id')
+        course_id = request.query_params.get('course_id')
 
         # Query all Announcements from the database where the course id matches
         announcements = models.Announcement.objects.filter(course=get_object_or_404(models.Course, pk=course_id))
