@@ -21,3 +21,8 @@ jobs:
       run: |
         cd CourseManagementService
         python manage.py test
+    - name: Build and push the image
+      run: |
+        docker login --username mysoladi --password ${{secrets.ACCESS_TOKEN}} ghcr.io
+        docker build -t ghcr.io/mysoladi/course-management-service:latest --file Dockerfile .
+        docker push ghcr.io/mysoladi/course-management-service:latest
