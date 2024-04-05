@@ -13,7 +13,7 @@ RUN pip install -r requirements.txt
 
 COPY ./CourseManagementService api/
 
-COPY ./manage.py .
+COPY ./CourseManagementService/manage.py .
 
 COPY ./CourseManagementService .
 
