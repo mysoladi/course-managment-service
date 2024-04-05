@@ -19,8 +19,6 @@ COPY ./CourseManagementService CourseManagementService/
 
 COPY ./entrypoint.sh .
 
-COPY ./.env .
-
 RUN chmod +x entrypoint.sh
 
 ENTRYPOINT ["./entrypoint.sh"]
