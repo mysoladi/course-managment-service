@@ -33,6 +33,13 @@ ALLOWED_HOSTS = [
     "https://course-management-service.onrender.com"
 ]
 
+CORS_ALLOW_ALL_ORIGINS = True  # Allow requests from all origins (for development only)
+
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',
+    # Add other allowed origins here
+]
 
 # Application definition
 
