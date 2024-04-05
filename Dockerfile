@@ -15,7 +15,7 @@ COPY ./CourseManagementService api/
 
 COPY ./manage.py .
 
-COPY ./CourseManagementService CourseManagementService/
+COPY ./CourseManagementService .
 
 COPY ./entrypoint.sh .
 
