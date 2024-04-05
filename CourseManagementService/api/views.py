@@ -77,9 +77,10 @@ class ApproveCourse(APIView):
         if len(channel_list) == 0:
             serializer = serializers.ChannelSerializer()
             serializer.data['course_id'] = course
-            Channel = serializer.save()
-            Channel.save()
-            return JsonResponse({"message": "Course approved successfully, and corresponding course channel added successfully"}, status=status.HTTP_201_CREATED)
+            if serializer.is_valid():
+                Channel = serializer.save()
+                Channel.save()
+                return JsonResponse({"message": "Course approved successfully, and corresponding course channel added successfully"}, status=status.HTTP_201_CREATED)
         return Response({"message": "Course approved successfully"}, status=status.HTTP_200_OK)
     
 class DenyCourse(APIView):
