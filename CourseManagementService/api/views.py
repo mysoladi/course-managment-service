@@ -169,6 +169,22 @@ class GetCourseList(APIView):
 
         # Return the serialized data as a response
         return Response(serializer.data, status=status.HTTP_200_OK)
+    
+class PendingCourseList(APIView):
+
+    def get(self, request):
+        # Retrieve user_role from query parameters
+        user_role = self.request.query_params.get('user_role')
+        if user_role == 'Admin':
+
+            # Query all courses from the database where the people list contains the user_id
+            courses = models.Course.objects.filter(status='Pending')
+            # Serialize the course instances into JSON format
+            serializer = serializers.AdminCourseSerializer(courses, many=True)
+            # Return the serialized data as a response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # If the user is not an admin, return an error response
+        return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
         
 class LeaveCourse(APIView):
     def put(self, request):

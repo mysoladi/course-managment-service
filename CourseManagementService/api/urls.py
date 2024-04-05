@@ -13,6 +13,7 @@ urlpatterns = [
     path('course/conclude', views.ConcludeCourse.as_view(), name='conclude_course'),
     path('course/join', views.JoinCourse.as_view(), name='join_course'),
     path('course/leave', views.LeaveCourse.as_view(), name='leave_course'),
+    path('course/pending', views.PendingCourseList.as_view(), name='pending_courses'),
     path('announcement/', views.GetAnnouncementList.as_view(), name="get_announcement"),
     path('announcement/add', views.AddAnnouncement.as_view(), name="add_announcement"),
     path('announcement/remove', views.RemoveAnnouncement.as_view(), name="remove_announcement"),

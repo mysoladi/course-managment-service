@@ -46,7 +46,19 @@ class CourseViewsTestCase(TestCase):
         response = client.put(url, data, content_type='application/json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(models.Course.objects.get(course_id=course.course_id).status, 'Approved')
-    
+
+    def test_get_pending_course(self):
+        self.user_role = 'Admin'
+        # Create a test pending course
+        course = models.Course.objects.create(course_name='Test Course', course_description='Description of Test Course')
+
+        client = Client()
+        url = reverse('pending_courses')
+        url += f'?user_id={self.user_id}&user_role={self.user_role}'
+        response = client.get(url, content_type='application/json')
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
     def test_deny_course(self):
         self.user_role = 'Admin'
         # Create a test course
