@@ -53,8 +53,8 @@ class RemoveCourse(APIView):
 class ApproveCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
-        user_id = self.request.query_params.get('user_id')
-        user_role = self.request.query_params.get('user_role')
+        user_id = self.request.get('user_id')
+        user_role = self.request.get('user_role')
         if user_role != 'Admin':
             return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -77,8 +77,8 @@ class ApproveCourse(APIView):
 class DenyCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
-        user_id = self.request.query_params.get('user_id')
-        user_role = self.request.query_params.get('user_role')
+        user_id = self.request.get('user_id')
+        user_role = self.request.get('user_role')
         if user_role != 'Admin':
             return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -179,6 +179,38 @@ class PendingCourseList(APIView):
 
             # Query all courses from the database where the people list contains the user_id
             courses = models.Course.objects.filter(status='Pending')
+            # Serialize the course instances into JSON format
+            serializer = serializers.AdminCourseSerializer(courses, many=True)
+            # Return the serialized data as a response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # If the user is not an admin, return an error response
+        return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
+    
+class ApproveCourseList(APIView):
+
+    def get(self, request):
+        # Retrieve user_role from query parameters
+        user_role = self.request.query_params.get('user_role')
+        if user_role == 'Admin':
+
+            # Query all courses from the database where the people list contains the user_id
+            courses = models.Course.objects.filter(status='Approved')
+            # Serialize the course instances into JSON format
+            serializer = serializers.AdminCourseSerializer(courses, many=True)
+            # Return the serialized data as a response
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        # If the user is not an admin, return an error response
+        return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
+    
+class DenyCourseList(APIView):
+
+    def get(self, request):
+        # Retrieve user_role from query parameters
+        user_role = self.request.query_params.get('user_role')
+        if user_role == 'Admin':
+
+            # Query all courses from the database where the people list contains the user_id
+            courses = models.Course.objects.filter(status='Denied')
             # Serialize the course instances into JSON format
             serializer = serializers.AdminCourseSerializer(courses, many=True)
             # Return the serialized data as a response
