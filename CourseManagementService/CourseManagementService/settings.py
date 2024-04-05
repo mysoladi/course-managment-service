@@ -33,13 +33,27 @@ ALLOWED_HOSTS = [
     "https://course-management-service.onrender.com"
 ]
 
-CORS_ALLOW_ALL_ORIGINS = True  # Allow requests from all origins (for development only)
-
-
 CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3030',
     'http://localhost:3000',
-    # Add other allowed origins here
+    'http://localhost:3002',
+    "http://127.0.0.1:8000",
+    'https://pages.github.iu.edu',
+    "https://edunexa.onrender.com"
 ]
+
+CORS_ALLOW_HEADERS = [
+    'Authorization',  # Add other headers you want to allow
+    'content-type'
+]
+
+CORS_ALLOW_METHODS = [
+    'GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS',  # Add other allowed methods
+]
+
+CORS_ALLOW_ALL_ORIGINS = True  # Allow requests from all origins (for development purposes)
+CORS_ALLOW_CREDENTIALS = True  # Allow credentials (e.g., cookies, authorization headers)
+
 
 # Application definition
 
