@@ -32,3 +32,11 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return models.Announcement.objects.create(**validated_data)
+
+class ChannelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Channels
+        fields = []
+    
+    def create(self, validated_data):
+        return models.Channels.objects.create(**validated_data)

@@ -72,6 +72,17 @@ class ApproveCourse(APIView):
         # Save the updated course
         course.save()
 
+        # Create a channel for the course
+        channel_list = models.Channels.objects.filter(course_id=course)
+        if len(channel_list) == 0:
+            serializer = serializers.ChannelSerializer()
+            if serializer.is_valid():
+                serializer.validated_data['course_id'] = course
+                Channel = serializer.save()
+                Channel.save()
+                return JsonResponse({"message": "Course approved successfully, and corresponding course channel added successfully"}, status=status.HTTP_201_CREATED)
+            else:
+                return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"message": "Course approved successfully"}, status=status.HTTP_200_OK)
     
 class DenyCourse(APIView):
