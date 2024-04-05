@@ -1,10 +1,26 @@
 from rest_framework import serializers
-from .models import Course
+from . import models
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Course
+        model = models.Course
         fields = ['course_name', 'course_description']
 
     def create(self, validated_data):
-        return Course.objects.create(**validated_data)
+        return models.Course.objects.create(**validated_data)
+    
+class AssignmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Assignment
+        fields = ['title', 'description', 'due_date']
+
+    def create(self, validated_data):
+        return models.Assignment.objects.create(**validated_data)
+    
+class AnnouncementSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Announcement
+        fields = ['title', 'message']
+    
+    def create(self, validated_data):
+        return models.Announcement.objects.create(**validated_data)
