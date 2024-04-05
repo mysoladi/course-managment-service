@@ -36,7 +36,7 @@ class AnnouncementSerializer(serializers.ModelSerializer):
 class ChannelSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Channels
-        fields = []
+        fields = ['course_id']
     
     def create(self, validated_data):
         return models.Channels.objects.create(**validated_data)
