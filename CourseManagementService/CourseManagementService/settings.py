@@ -26,6 +26,7 @@ SECRET_KEY = 'django-insecure-j#ku9soo)30js)n1vqxbeqqouf#bly7x#@w0^jqjiuxq64i!8q
 DEBUG = True
 
 ALLOWED_HOSTS = [
+    'course-management-service.onrender.com',
     'localhost',
     '0.0.0.0',
     '127.0.0.1',
