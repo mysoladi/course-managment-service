@@ -9,6 +9,14 @@ class CourseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         return models.Course.objects.create(**validated_data)
     
+class AdminCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Course
+        fields = ['course_id', 'people', 'course_description', 'course_name', ]
+
+    def create(self, validated_data):
+        return models.Course.objects.create(**validated_data)
+    
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Assignment
