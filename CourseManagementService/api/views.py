@@ -53,8 +53,8 @@ class RemoveCourse(APIView):
 class ApproveCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
-        user_id = self.request.get('user_id')
-        user_role = self.request.get('user_role')
+        user_id = self.request.query_params.get('user_id')
+        user_role = self.request.query_params.get('user_role')
         if user_role != 'Admin':
             return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -77,8 +77,8 @@ class ApproveCourse(APIView):
 class DenyCourse(APIView):
     def put(self, request):
         # Grab the Admin's ID (The person removing the course)
-        user_id = self.request.get('user_id')
-        user_role = self.request.get('user_role')
+        user_id = self.request.query_params.get('user_id')
+        user_role = self.request.query_params.get('user_role')
         if user_role != 'Admin':
             return Response({"message": "User is not an Admin."}, status=status.HTTP_400_BAD_REQUEST)
 
