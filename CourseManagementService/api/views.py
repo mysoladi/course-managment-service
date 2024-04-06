@@ -77,7 +77,7 @@ class ApproveCourse(APIView):
         if len(channel_list) == 0:
             channel = models.Channels.objects.create(course_id=course.course_id)
             channel.save()
-            return JsonResponse({"message": "Course approved successfully, and corresponding course channel added successfully"}, status=status.HTTP_201_CREATED)
+            return JsonResponse({"message": "Course approved successfully, and corresponding course channel added successfully"}, status=status.HTTP_200_OK)
         return Response({"message": "Course approved successfully"}, status=status.HTTP_200_OK)
     
 class DenyCourse(APIView):
