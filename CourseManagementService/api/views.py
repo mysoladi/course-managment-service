@@ -162,7 +162,7 @@ class GetCourseList(APIView):
         user_id = request.query_params.get('user_id')
 
         # Query all courses from the database where the people list contains the user_id
-        courses = models.Course.objects.filter(people__contains=[{'user_id': user_id}])
+        courses = models.Course.objects.filter(people__contains=[{'user_id': user_id}],status='Approved')
 
         # Serialize the course instances into JSON format
         serializer = serializers.CourseSerializer(courses, many=True)
