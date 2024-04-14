@@ -237,7 +237,7 @@ class LeaveCourse(APIView):
 class JoinCourse(APIView):
     def put(self, request):
         # Retrieve user_id from query parameters
-        user_id = request.query_params.get('user_id')
+        user_id = request.data.get('user_id')
         
         # Retrieve course_id from request data
         course_id = request.data.get('course_id')
