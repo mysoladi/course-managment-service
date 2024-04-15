@@ -354,17 +354,32 @@ class GetAssignmentList(APIView):
     def get(self, request):
         # Retrieve user_id from query parameters
         user_id = request.query_params.get('user_id')
-
         course_id = request.data.get('course_id')
 
-        # Query all Anssignment from the database where the course id matches
-        announcements = models.Assignment.objects.filter(course=get_object_or_404(models.Course, pk=course_id))
+        # Get the course instance from the database or return 404 if not found
+        course = get_object_or_404(models.Course, pk=course_id)
 
-        # Serialize the course instances into JSON format
-        serializer = serializers.AssignmentSerializer(announcements, many=True)
+        for person in course.people:
+            id = person.get('user_id')
+            title = person.get('title')
 
-        # Return the serialized data as a response
-        return Response(serializer.data, status=status.HTTP_200_OK)
+            if id == user_id and title == 'Student':
+                # Query all Anssignment from the database where the course id matches
+                assignments = models.Assignment.objects.filter(course=course, is_published=True)
+                # Serialize the course instances into JSON format
+                serializer = serializers.AssignmentSerializer(assignments, many=True)
+                # Return the serialized data as a response
+                return Response(serializer.data, status=status.HTTP_200_OK)
+            if id == user_id and title == 'Instructor':
+                # Query all Anssignment from the database where the course id matches
+                assignments = models.Assignment.objects.filter(course=course)
+                # Serialize the course instances into JSON format
+                serializer = serializers.AssignmentSerializer(assignments, many=True)
+                # Return the serialized data as a response
+                return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"message": "Failed to get assignments. User is not in the course."}, status=status.HTTP_400_BAD_REQUEST)
+        
+
     
 class PublishAssignment(APIView):
     def put(self, request):
