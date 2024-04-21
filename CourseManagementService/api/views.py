@@ -7,6 +7,15 @@ from rest_framework import status
 from rest_framework.views import APIView
 from . import serializers
 from . import models
+from rest_framework import viewsets
+from .models import FileUpload
+from .serializers import FileUploadSerializer
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
+import os     
+
+
 
 class AddCourse(APIView):
     def post(self, request):
@@ -409,3 +418,39 @@ class PublishAssignment(APIView):
                 return Response({"message": "assignment published successfully"}, status=status.HTTP_200_OK)
         # If the loop completes without finding a matching instructor, return an error response
         return Response({"message": "Failed to publish assignment. User is not the instructor."}, status=status.HTTP_400_BAD_REQUEST)
+    
+class FileUploadViewSet(viewsets.ModelViewSet):
+    queryset = FileUpload.objects.all()
+    serializer_class = FileUploadSerializer
+    
+def list_files(request):
+    files_list = FileUpload.objects.all()
+    files_data = [
+        {
+            'id': file.id,
+            'name': os.path.basename(file.file.name),
+            'url': file.file.url
+        }
+        for file in files_list
+    ]
+    return JsonResponse(files_data, safe=False)
+
+
+
+@csrf_exempt
+@api_view(['POST'])
+def update_grade(request, pk):
+    try:
+        file = FileUpload.objects.get(pk=pk)
+    except FileUpload.DoesNotExist:
+        return Response({'error': 'File not found'}, status=404)
+
+    grade = request.data.get('grade')
+    if grade is not None:
+        file.grade = int(grade)  # Ensure conversion to int, as it's an IntegerField
+        file.save()
+        return Response(FileUploadSerializer(file).data)
+    else:
+        return Response({'error': 'Grade not provided'}, status=400)
+
+
