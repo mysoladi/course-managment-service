@@ -42,3 +42,9 @@ class Announcement(models.Model):
     author = models.IntegerField()
     message = models.TextField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='announcements')
+
+class FileUpload(models.Model):
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+    file = models.FileField(upload_to='uploads/')
+    grade = models.IntegerField(null=True, blank=True)
+  

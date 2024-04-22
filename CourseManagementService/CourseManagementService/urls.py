@@ -14,9 +14,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import routers
+from api.views import FileUploadViewSet
+from api.views import list_files
+from django.conf import settings
+from django.conf.urls.static import static
+from api.views import update_grade
+
+
+# Create a router and register the viewsets with it
+router = routers.DefaultRouter()
+router.register(r'fileuploads', FileUploadViewSet)
 
 urlpatterns = [
-    path('', include('api.urls'))
+    path('', include('api.urls')),
+    path('', include(router.urls)),
+    path('admin/', admin.site.urls),
+    path('list-files/', list_files, name='list-files'),
+    path('update-grade/<int:pk>/', update_grade, name='update_grade'),
+    
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
