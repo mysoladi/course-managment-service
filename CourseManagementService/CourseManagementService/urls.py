@@ -30,6 +30,7 @@ router = routers.DefaultRouter()
 router.register(r'fileuploads', FileUploadViewSet)
 
 urlpatterns = [
+    path('', include('api.urls')),
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
     path('list-files/', list_files, name='list-files'),
