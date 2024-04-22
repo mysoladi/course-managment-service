@@ -305,11 +305,13 @@ class AddAssignment(APIView):
         
         # Get the course instance from the database or return 404 if not found
         course = get_object_or_404(models.Course, pk=course_id)
+        # print(request.data)
 
         # Iterate over the people dictionary in the course
         for person in course.people:
             id = person.get('user_id')
             title = person.get('title')
+            # print(person,course,user_id)
 
             if id == user_id and title == 'Instructor':
                 serializer = serializers.AssignmentSerializer(data=request.data)
@@ -354,7 +356,7 @@ class GetAssignmentList(APIView):
     def get(self, request):
         # Retrieve user_id from query parameters
         user_id = request.query_params.get('user_id')
-        course_id = request.data.get('course_id')
+        course_id = request.query_params.get('course_id')
 
         # Get the course instance from the database or return 404 if not found
         course = get_object_or_404(models.Course, pk=course_id)
@@ -384,7 +386,7 @@ class GetAssignmentList(APIView):
 class PublishAssignment(APIView):
     def put(self, request):
         # Grab the Instructor's ID (The person publishing the assignment)
-        user_id = self.request.query_params.get('user_id')
+        user_id = request.query_params.get('user_id')
 
         # Retrieve course_id from request data
         assignment_id = request.data.get('assignment_id')

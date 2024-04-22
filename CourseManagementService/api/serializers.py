@@ -20,7 +20,7 @@ class AdminCourseSerializer(serializers.ModelSerializer):
 class AssignmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Assignment
-        fields = ['title', 'description', 'due_date']
+        fields = ['assignment_id','title', 'description', 'due_date','is_published']
 
     def create(self, validated_data):
         return models.Assignment.objects.create(**validated_data)
@@ -28,7 +28,7 @@ class AssignmentSerializer(serializers.ModelSerializer):
 class AnnouncementSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Announcement
-        fields = ['title', 'message']
+        fields = ['title', 'message','date']
     
     def create(self, validated_data):
         return models.Announcement.objects.create(**validated_data)
