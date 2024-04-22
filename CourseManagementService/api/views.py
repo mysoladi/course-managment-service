@@ -14,8 +14,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 import os     
-
-
+from django.shortcuts import render
+from django.db.models import Q
+from .models import Course
 
 class AddCourse(APIView):
     def post(self, request):
@@ -454,3 +455,25 @@ def update_grade(request, pk):
         return Response({'error': 'Grade not provided'}, status=400)
 
 
+
+
+class CourseSearch(APIView):
+    def get(self, request):
+        query = request.GET.get('q', '')
+        if query:
+            courses = Course.objects.filter(
+                Q(course_name__icontains=query) | Q(course_description__icontains=query),
+                visible=True
+            ).order_by('course_name')
+            courses_data = [
+                {"course_id": course.course_id, "course_name": course.course_name, "status": course.status}
+                for course in courses
+            ]
+            print(courses)
+            return Response({"courses": courses_data})
+        else:
+            # Optionally, return no courses if no query is specified or show some default set
+            return Response({"courses": []})
+
+# Or, if you still want to return HTML:
+#         return render(request, 'courses/search_results.html', {'courses': courses, 'query': query})
