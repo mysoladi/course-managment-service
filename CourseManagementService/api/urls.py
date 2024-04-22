@@ -22,5 +22,7 @@ urlpatterns = [
     path('assignment/', views.GetAssignmentList.as_view(), name="get_assignment"),
     path('assignment/add', views.AddAssignment.as_view(), name="add_assignment"),
     path('assignment/publish', views.PublishAssignment.as_view(), name="publish_assignment"),
-    path('assignment/remove', views.RemoveAssignment.as_view(), name="remove_assignment")
+    path('assignment/remove', views.RemoveAssignment.as_view(), name="remove_assignment"),
+    path('course/search/', views.CourseSearch.as_view(), name="course_search")
+
 ]
