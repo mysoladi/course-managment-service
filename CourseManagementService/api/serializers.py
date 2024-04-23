@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from . import models
+from .models import FileUpload
 
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -32,3 +33,10 @@ class AnnouncementSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         return models.Announcement.objects.create(**validated_data)
+    
+    
+class FileUploadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FileUpload
+        fields = '__all__'
+
