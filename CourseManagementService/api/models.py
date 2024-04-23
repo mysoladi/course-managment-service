@@ -1,4 +1,7 @@
+import datetime
+
 from django.db import models
+from datetime import datetime
 
 class Course(models.Model):
     STATUS_CHOICES = (
@@ -34,6 +37,7 @@ class Assignment(models.Model):
     due_date = models.DateField()
     is_published = models.BooleanField(default=False)
     description = models.TextField()
+    file = models.TextField(default='path/to/default/file.ext')
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='assignments')
 
 class Announcement(models.Model):
@@ -42,6 +46,8 @@ class Announcement(models.Model):
     author = models.IntegerField()
     message = models.TextField()
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='announcements')
+    date = models.DateField(auto_now_add=True)
+
 
 class FileUpload(models.Model):
     uploaded_at = models.DateTimeField(auto_now_add=True)
